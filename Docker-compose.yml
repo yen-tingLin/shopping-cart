@@ -1,0 +1,73 @@
+version: '1.0'
+services:
+  cart-db:
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    env_file: ./.env
+    environment:
+      MYSQL_DATABASE=${MYSQL_DATABASE}
+      MYSQL_USER=${MYSQL_USER}
+      MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+  cart:
+    build: .
+    ports:
+      - 8090:8090
+    depends_on:
+      - cart-db
+    environment:
+      DATABASE_HOST=${MYSQL_HOST}
+      DATABASE_USER=${MYSQL_USER}
+      DATABASE_PASSWORD=${MYSQL_PASSWORD}
+      DATABASE_NAME=${MYSQL_DATABASE}
+      DATABASE_PORT=${MYSQL_PORT}
+
+  redis:
+  rebbit-mq:
+volumes:
+
+
+
+
+
+
+
+
+##Service
+#services:
+#  # mysql
+#  cart-db:
+#    image: mysql:8.0.17
+#    container_name: cart-db
+#    volumes:
+#      - mysql-data: /var/lib/mysql
+#    environment:
+#      MYSQL_PASSWORD:
+#    ports:
+#      - "3306:3306"
+#    networks:
+#      cart-network
+#
+#  # shopping cart
+#  cart:
+#    depends_on:
+#      - cart-db
+#    image:
+#    build:
+#      context: ./
+#      dockerfile: Dockerfile
+#    ports:
+#      - "8090:8090"
+#    environment:
+#
+#  redis:
+#    depends_on:
+#      - cart-db
+#      - cart
+#
+#  rabbit-mq:
+#    depends_on:
+#      - cart-db
+#      - cart
